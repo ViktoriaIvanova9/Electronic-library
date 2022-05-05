@@ -1,11 +1,11 @@
 #include "ElectronicLibrary.h"
 
-void ElectronicLibrary::copyFrom(const Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary)
+void ElectronicLibrary::copyFrom(Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary)
 {
     this->currCountBooks = currCountBooks;
     this->capacityLibrary = capacityLibrary;
 
-    BooksLibrary = new Book *[currCountBooks];
+    BooksLibrary = new Book *[capacityLibrary];
 
     for (size_t i = 0; i < currCountBooks; ++i)
     {
@@ -59,7 +59,7 @@ ElectronicLibrary::ElectronicLibrary()
     capacityLibrary = 0;
 }
 
-ElectronicLibrary::ElectronicLibrary(const Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary)
+ElectronicLibrary::ElectronicLibrary(Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary)
 {
     copyFrom(BooksLibrary, currCountBooks, capacityLibrary);
 }
@@ -84,98 +84,173 @@ ElectronicLibrary::~ElectronicLibrary()
     clear();
 }
 
-void helpChoise()
+void ElectronicLibrary::swap(Book *first, Book *second)
 {
-    std::cout << "For sorting all books choose 1\n";
-    std::cout << "For finding a book choose 2\n";
-    std::cout << "For adding new book choose 3\n";
-    std::cout << "For removing any book choose 4\n";
-    std::cout << "For printing any book choose 5\n";
-
-    std::cout << "For exiting library choose 0\n";
+    Book temp = *first;
+    *first = *second;
+    *second = temp;
 }
 
-/*Извежда последователно за всяка книга следната
-информация: <заглавие>, <автор>, <ISBN>.
-Изведеният списък да е сортиран възходящо или
-низходящо (по желание на потребителя) по едно
-от следните полета: заглавие, автор, рейтинг,
-избрани от потребителя*/
-void ElectronicLibrary::sortBooksBy(int order, int criteria)
+void ElectronicLibrary::selectionSort(Book **arrOfBooks, size_t booksCount, unsigned property, bool order)
+{
+    size_t i, j, minIndex;
+
+    for (int i = 0; i < booksCount - 1; ++i)
+    {
+        minIndex = i;
+
+        for (j = i + 1; j < booksCount; ++i)
+        {
+            if (property == 1) // by title
+            {
+                if (order == false)
+                {
+                    if (arrOfBooks[minIndex]->getBookTitle() < arrOfBooks[j]->getBookTitle()) // descending order
+                        minIndex = j;
+                }
+                else
+                {
+                    if (arrOfBooks[j]->getBookTitle() < arrOfBooks[minIndex]->getBookTitle()) // ascending order
+                        minIndex = j;
+                }
+            }
+
+            else if (property == 2) // by author
+            {
+                if (order == false)
+                {
+                    if (arrOfBooks[minIndex]->getNameAuthor() < arrOfBooks[j]->getNameAuthor()) // descending order
+                        minIndex = j;
+                }
+                else
+                {
+                    if (arrOfBooks[j]->getNameAuthor() < arrOfBooks[minIndex]->getNameAuthor()) // ascending order
+                        minIndex = j;
+                }
+            }
+
+            else if (property == 3) // by rating
+            {
+                if (order == false)
+                {
+                    if (arrOfBooks[minIndex]->getRating() < arrOfBooks[j]->getRating()) // descending order
+                        minIndex = j;
+                }
+                else
+                {
+                    if (arrOfBooks[j]->getRating() < arrOfBooks[minIndex]->getRating()) // ascending order
+                        minIndex = j;
+                }
+            }
+        }
+
+        swap(arrOfBooks[minIndex], arrOfBooks[i]);
+    }
+}
+
+/*Извежда последователно за всяка книга следната информация: <заглавие>, <автор>, <ISBN>.
+Изведеният списък да е сортиран възходящо или низходящо (по желание на потребителя) по едно
+от следните полета: заглавие, автор, рейтинг, избрани от потребителя*/
+void ElectronicLibrary::sortBooksBy(int property, int order)
 {
     if (isEmptyArr())
     {
-        std::cout << "There aren't books in this library.\n";
+        std::cout << "There aren't any books in this library.\n";
         return;
     }
 
-    if (order == 1)
+    if (order == 1) // ascending order sort
     {
-        // sortirai vuzhodqshto
-        if (criteria == 1)
+        if (property == 1) // by title
         {
-            // sortirai po zaglavie
+            selectionSort(BooksLibrary, currCountBooks, 1, true);
         }
-        else if (criteria == 2)
+        else if (property == 2) // by author
         {
-            // sort po author
+            selectionSort(BooksLibrary, currCountBooks, 2, true);
         }
-        else
+        else // by rating
         {
-        } // sort po rating
+            selectionSort(BooksLibrary, currCountBooks, 3, true);
+        }
     }
 
-    else
+    else if(order==2) // descending order sort
     {
-        // sortirai nizhodqshto
-        if (criteria == 1)
+        if (property == 1) // by title
         {
-            // sortirai po zaglavie
+            selectionSort(BooksLibrary, currCountBooks, 1, false);
         }
-        else if (criteria == 2)
+        else if (property == 2) // by author
         {
-            // sort po author
+            selectionSort(BooksLibrary, currCountBooks, 2, false);
         }
-        else
+        else // by rating
         {
-        } // sort po rating
+            selectionSort(BooksLibrary, currCountBooks, 3, false);
+        }
     }
 }
 
 void ElectronicLibrary::printSortedBooks() const
 {
+    for (size_t i = 0; i < currCountBooks; ++i)
+    {
+        std::cout << BooksLibrary[i]->getBookTitle() << ", " << BooksLibrary[i]->getNameAuthor() << ", " << BooksLibrary[i]->getISBN() << std::endl;
+    }
 }
 
-/*Извежда на екрана подробна информация за
-книга с въведени от потребителя заглавие, автор,
-ISBN или част от описание. При първите три
-критерия се изисква точно съвпадение, а при
-описанието може въведеният от потребителя низ
-да се съдържа в описанието. Търсене на книга по
-зададен критерий да игнорира регистъра на
-буквите (малки или големи).*/
-Book &ElectronicLibrary::findBook()
+/*Извежда на екрана подробна информация за книга с въведени от потребителя заглавие, автор, ISBN или част от описание.
+При първите три критерия се изисква точно съвпадение, а при описанието може въведеният от потребителя низ
+да се съдържа в описанието. Търсене на книга по зададен критерий да игнорира регистъра на буквите (малки или големи).*/
+void ElectronicLibrary::findBook(MyString bookTttle, MyString bookAuthor, MyString ISBN, MyString shortDescription)
 {
+    for (size_t i = 0; i < currCountBooks; ++i)
+    {
+        if ((BooksLibrary[i]->getBookTitle() == bookTttle && BooksLibrary[i]->getNameAuthor() == bookAuthor && BooksLibrary[i]->getISBN() == ISBN) || (isSubstring(BooksLibrary[i]->getShortDescription(), shortDescription)))
+        {
+            std::cout << "The name of the book is: " << BooksLibrary[i]->getBookTitle() << std::endl;
+            std::cout << "The author of the book is: " << BooksLibrary[i]->getNameAuthor() << std::endl;
+            std::cout << "The name of text file where the book is: " << BooksLibrary[i]->getNameTextFile() << std::endl;
+            std::cout << "The short description of the book is: " << BooksLibrary[i]->getShortDescription() << std::endl;
+            std::cout << "The reting of the book is: " << BooksLibrary[i]->getRating() << std::endl;
+            std::cout << "The ISBN of the book is: " << BooksLibrary[i]->getISBN() << std::endl;
+        }
+    }
 }
 
-void ElectronicLibrary::addBookToTextFile(const Book &obj)
+void ElectronicLibrary::addBookToTextFile(MyString nameAuthor, MyString bookTitle, const MyString nameTextFile, MyString shortDescription, float rating, MyString ISBN) const
 {
-    std::ofstream file("BooksLibrary.txt");
+    std::ofstream fileData("BooksLibrary.txt", std::ios::app);
 
-    if (!file.is_open())
+    if (!fileData.is_open())
     {
         std::cout << "Error opening file!";
         return;
     }
 
-    file << obj.getNameAuthor() << "," << obj.getBookTitle() << "," << obj.getRating() << "," << obj.getISBN() << "," << obj.getNameTextFile() << std::endl;
+    fileData << nameAuthor << ", " << bookTitle << ", " << shortDescription << ", " << rating << ", " << ISBN << std::endl;
 
-    file.close();
+    fileData.close();
+
+    std::ofstream fileBook(nameTextFile.c_str(), std::ios::app);
+
+    if (!fileBook.is_open())
+    {
+        std::cout << "Error opening file!";
+        return;
+    }
+
+    MyString bookContent;
+    std::cin >> bookContent;
+
+    fileBook << bookContent << std::endl;
+
+    fileBook.close();
 }
 
-/*Добавя в библиотеката нова книга, като въвежда
-пълна информация за нея.*/
-void ElectronicLibrary::addBookToLibrary(const Book &obj)
+/*Добавя в библиотеката нова книга, като въвежда пълна информация за нея.*/
+void ElectronicLibrary::addBookToLibrary(MyString nameAuthor, MyString bookTitle, MyString nameTextFile, MyString shortDescription, float rating, MyString ISBN)
 {
     if (isEmptyArr())
     {
@@ -187,23 +262,26 @@ void ElectronicLibrary::addBookToLibrary(const Book &obj)
         resize();
     }
 
-    BooksLibrary[currCountBooks] = new Book(obj.getNameAuthor(), obj.getBookTitle(), obj.getNameTextFile(), obj.getShortDescription(), obj.getRating(), obj.getISBN());
+    BooksLibrary[currCountBooks] = new Book(nameAuthor, bookTitle, nameTextFile, shortDescription, rating, ISBN);
     currCountBooks++;
 }
 
-/*Премахване на книга от библиотеката, като в
-този случай се дава възможност за се изтрие и
-файла, свързан с книгата.*/
-void ElectronicLibrary::removeBookFromLibrary(const Book &obj)
+/*Премахване на книга от библиотеката, като в този случай се дава възможност за се изтрие и файла, свързан с книгата.*/
+void ElectronicLibrary::removeBookFromLibrary(MyString ISBN)
 {
     for (size_t i = 0; i < currCountBooks; ++i)
     {
-        if (strcmp(BooksLibrary[i]->getISBN(), obj.getISBN()) == 0)
+        if (BooksLibrary[i]->getISBN() == ISBN)
         {
             delete BooksLibrary[i];
             shift(i);
+            break;
         }
     }
+}
+
+void removeBookFromTextFile(MyString ISBN, const MyString nameTextFile)
+{
 }
 
 void ElectronicLibrary::printBookInfo() const

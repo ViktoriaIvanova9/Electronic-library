@@ -1,6 +1,6 @@
 #include "UserConnection.h"
 
-void UserConnection::helpChoise()
+void UserConnection::chooseFunction()
 {
     std::cout << "For sorting all books choose 1\n";
     std::cout << "For finding a book choose 2\n";
@@ -11,7 +11,7 @@ void UserConnection::helpChoise()
     std::cout << "For exiting library choose 0\n";
 }
 
-void UserConnection::sortingBooks()
+unsigned UserConnection::chooseOrderOfSorting()
 {
     int chooseOrder;
 
@@ -26,8 +26,11 @@ void UserConnection::sortingBooks()
         else
             std::cout << "Enter valid number!\n";
     }
+}
 
-    int chooseSortingCriteria;
+unsigned UserConnection::chooseSortingProperty()
+{
+    int sortingProperty;
 
     std::cout << "To sort by title press 1\n";
     std::cout << "To sort by author press 2\n";
@@ -35,8 +38,8 @@ void UserConnection::sortingBooks()
 
     while (true)
     {
-        std::cin >> chooseSortingCriteria;
-        if (chooseSortingCriteria == 1 || chooseSortingCriteria == 2 || chooseSortingCriteria == 3)
+        std::cin >> sortingProperty;
+        if (sortingProperty == 1 || sortingProperty == 2 || sortingProperty == 3)
             break;
         else
             std::cout << "Enter valid number!\n";
@@ -45,27 +48,99 @@ void UserConnection::sortingBooks()
 
 void UserConnection::addBook()
 {
-    std::cout<<"Author of the book: ";
-    char* nameAuthor=new char[]
-    std::cout<<"Name of the book: ";
-    std::cout<<"Name of the book's text file: ";
-    std::cout<<"Desctiption of the book: ";
-    std::cout<<"Book rating: ";
-    std::cout<<"Book ISBN: ";
+    MyString nameAuthor;
+    std::cout << "Author of the book: ";
+    std::cin>>nameAuthor;
+
+    MyString bookTitle;
+    std::cout << "Name of the book: ";
+    std::cin>>bookTitle;
+    std::cout << "Name of the book's text file: ";
+    std::cout << "Desctiption of the book: ";
+    std::cout << "Book rating: ";
+    std::cout << "Book ISBN: ";
 }
 
 void UserConnection::runProgram()
 {
-    int selectOption;
+    unsigned selectOption, orderOfSorting, sortingProperty;
 
     while (true)
     {
-        helpChoise();
+        chooseFunction();
         std::cin >> selectOption;
 
         if (selectOption == 1)
         {
-            if (sortingBooks() == 1)
+            orderOfSorting = chooseOrderOfSorting();
+
+            if (orderOfSorting == 1)
+            {
+                sortingProperty = chooseSortingProperty();
+
+                if (sortingProperty == 1)
+                    this->MyLibrary.sortBooksBy(1, 1); //ascending, by title
+
+                if (sortingProperty == 2)
+                    this->MyLibrary.sortBooksBy(1, 2); //ascending, by author
+
+                if (sortingProperty == 3)
+                    this->MyLibrary.sortBooksBy(1, 3); //ascending, by rating
+            }
+
+            else
+            {
+                chooseSortingProperty();
+                std::cin >> sortingProperty;
+
+                if (sortingProperty == 1)
+                    this->MyLibrary.sortBooksBy(2, 1); //descending, by title                               
+
+                if (sortingProperty == 2)               
+                    this->MyLibrary.sortBooksBy(2, 2); //descending, by author                      
+
+                if (sortingProperty == 3)               
+                    this->MyLibrary.sortBooksBy(2, 3); //descending, by rating                      
+            }
+        }
+
+        else if (selectOption == 2)
+        {
+        }
+
+        else if (selectOption == 3)
+        {
+        }
+
+        else if (selectOption == 4)
+        {
+        }
+
+        else if (selectOption == 5)
+        {
+        }
+
+        else if (selectOption == 0)
+        {
+            std::cout << "For saving changes press 'true'.\n";
+            std::cout << "For NOT saving changes press 'false'.\n";
+
+            std::cout << "Do you want to save the changes? ";
+
+            bool saveChanges;
+            std::cin >> saveChanges;
+
+            if (saveChanges == true)
+            {
+                // promeni vuv faila
+            }
+
+            else
+            {
+                // nishto??
+            }
+
+            return;
         }
     }
 }

@@ -3,7 +3,7 @@
 
 #include "Book.h"
 
-const size_t DEFAULT_COUNT_BOOKS=10;
+const size_t DEFAULT_COUNT_BOOKS = 10;
 
 class ElectronicLibrary
 {
@@ -12,7 +12,7 @@ private:
     size_t currCountBooks;
     size_t capacityLibrary;
 
-    void copyFrom(const Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary);
+    void copyFrom(Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary);
     void clear();
 
     void resize();
@@ -20,23 +20,27 @@ private:
 
     bool isEmptyArr();
 
-    void addBookToTextFile(const Book& obj);
+    void addBookToTextFile(MyString nameAuthor, MyString bookTitle, const MyString nameTextFile, MyString shortDescription, float rating, MyString ISBN) const;
+
 public:
     ElectronicLibrary();
-    ElectronicLibrary(const Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary);
+    ElectronicLibrary(Book **BooksLibrary, size_t currCountBooks, size_t capacityLibrary);
     ElectronicLibrary(const ElectronicLibrary &other);
     ElectronicLibrary &operator=(const ElectronicLibrary &other);
     ~ElectronicLibrary();
 
-    void startRunning();
+    void swap(Book *first, Book *second);
+    void selectionSort(Book **arrOfBooks, size_t booksCount, unsigned property, bool order);
 
-    void sortBooksBy(int order, int criteria);
+    void sortBooksBy(int property, int order);
     void printSortedBooks() const;
 
-    Book &findBook();
+    void findBook(MyString nameBook, MyString bookAuthor, MyString ISBN, MyString shortDescription);
 
-    void addBookToLibrary(const Book& obj);
-    void removeBookFromLibrary(const Book& obj);
+    void addBookToLibrary(MyString nameAuthor, MyString bookTitle, MyString nameTextFile, MyString shortDescription, float rating, MyString ISBN);
+
+    void removeBookFromLibrary(MyString ISBN);
+    void removeBookFromTextFile(MyString ISBN, const MyString nameTextFile);
 
     void printBookInfo() const;
 };

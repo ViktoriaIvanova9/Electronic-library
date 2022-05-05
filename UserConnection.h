@@ -1,5 +1,5 @@
-#ifndef USER_CONNECTION_H
-#define USER_CONNECTION_H
+#ifndef __USER_CONNECTION_H
+#define __USER_CONNECTION_H
 
 #include "ElectronicLibrary.h"
 
@@ -8,16 +8,15 @@ class UserConnection
 private:
     ElectronicLibrary MyLibrary;
 
-    void helpChoise();
+    void chooseFunction();
 
-
-    void sortingBooks();
+    unsigned chooseOrderOfSorting();
+    unsigned chooseSortingProperty();
 
     void addBook();
-
+    void removeBook();
 public:
     void runProgram();
-
 };
 
 
