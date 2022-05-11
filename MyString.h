@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 class MyString
 {
@@ -13,35 +14,33 @@ private:
     void copyFrom(const char *data, size_t size);
     void clear();
 
-
 public:
-    const char* getData() const;
-    size_t getSize() const;
-
     MyString();
-    MyString(const char *str);
-
-    MyString(MyString &&object);
-
+    MyString(const char *data);
     MyString(const MyString &other);
-
     MyString &operator=(const MyString &other);
-    MyString &operator=(MyString &&other);
-
     ~MyString();
 
-    char* toLower();
+    const char *getData() const;
+    size_t getSize() const;
 
-    const char* c_str() const;
+    char *toLower();
 
-    friend std::ostream& operator<<(std::ostream& os, const MyString& str);
-    friend std::istream& operator>>(std::istream& is, MyString& str);
+    const char *c_str() const;
 
+    void concat(const MyString& other);
+    
+    MyString& operator++();
+    MyString& operator+=(const MyString& other);
+
+    friend std::ostream &operator<<(std::ostream &os, const MyString &str);
+    friend std::istream &operator>>(std::istream &is, MyString &str);
 };
 
-bool operator==(const MyString& first,const MyString& second);
-bool operator<(const MyString& first,const MyString& second);
+bool operator==(const MyString &first, const MyString &second);
+bool operator!=(const MyString &first, const MyString &second);
+bool operator<(const MyString &first, const MyString &second);
 
-bool isSubstring(MyString& first, MyString& second);
+bool isSubstring(MyString first, MyString second);
 
 #endif
