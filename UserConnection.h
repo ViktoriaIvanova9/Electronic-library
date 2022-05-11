@@ -7,19 +7,15 @@ class UserConnection
 {
 private:
     ElectronicLibrary MyLibrary;
+    bool validPassword();
 
     void chooseFunction();
-
     unsigned chooseOrderOfSorting();
     unsigned chooseSortingProperty();
-
-    void addBook();
-    void removeBook();
+    unsigned chooseTypeOfPrinting();
+    bool deleteFile();
 public:
     void runProgram();
 };
-
-
-
 
 #endif
