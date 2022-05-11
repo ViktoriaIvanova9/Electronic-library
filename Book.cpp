@@ -2,12 +2,12 @@
 
 Book::Book(MyString nameAuthor, MyString bookTitle, MyString nameTextFile, MyString shortDescription, float rating, MyString ISBN)
 {
-    this->nameAuthor=nameAuthor;
-    this->bookTitle=bookTitle;
-    this->nameTextFile=nameTextFile;
-    this->shortDescription=shortDescription;
-    this->rating=rating;
-    this->ISBN=ISBN;
+    this->nameAuthor = nameAuthor;
+    this->bookTitle = bookTitle;
+    this->nameTextFile = nameTextFile;
+    this->shortDescription = shortDescription;
+    this->rating = rating;
+    this->ISBN = ISBN;
 }
 
 MyString Book::getNameAuthor() const
@@ -39,4 +39,3 @@ MyString Book::getISBN() const
 {
     return ISBN;
 }
-

@@ -26,7 +26,6 @@ public:
     MyString getShortDescription() const;
     float getRating() const;
     MyString getISBN() const;
-
 };
 
 #endif
