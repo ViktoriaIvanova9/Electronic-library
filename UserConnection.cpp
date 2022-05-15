@@ -2,16 +2,25 @@
 
 bool UserConnection::validPassword()
 {
-    MyString realPassword("0346012190");
-    MyString userPassword;
+    MyString userPassword = "";
+    MyString realPassword = "VIKTORIA";
+    char c;
     std::cout << "PASSWORD: ";
-    std::cin >> userPassword;
 
-    return realPassword == userPassword;
+    for (size_t i = 0; i < 9; ++i)
+    {
+        c = getch(); /// function that read characters from the keyboard
+        if (c == '\r')
+            break;
+        std::cout << "*";
+        userPassword += c;
+    }
+    return userPassword == realPassword;
 }
 
 void UserConnection::chooseFunction()
 {
+    std::cout << std::endl;
     std::cout << "For sorting all books choose 1\n";
     std::cout << "For finding a book choose 2\n";
     std::cout << "For adding new book choose 3\n";
@@ -94,6 +103,24 @@ bool UserConnection::deleteFile()
     return chooseDeleting;
 }
 
+bool UserConnection::findBookBy()
+{
+    unsigned chooseHowToFind;
+
+    std::cout << "To find book by title, author and ISBN press 1\n";
+    std::cout << "To find book by description press 0\n";
+
+    while (true)
+    {
+        std::cin >> chooseHowToFind;
+        if (chooseHowToFind == 1 || chooseHowToFind == 0)
+            break;
+        else
+            std::cout << "Enter a valid number!\n";
+    }
+    return chooseHowToFind;
+}
+
 void UserConnection::runProgram()
 {
     try
@@ -105,6 +132,7 @@ void UserConnection::runProgram()
         {
             chooseFunction();
             std::cin >> selectOption;
+
             if (selectOption == 1)
             {
                 orderOfSorting = chooseOrderOfSorting();
@@ -142,27 +170,38 @@ void UserConnection::runProgram()
             {
                 MyString nameAuthor, bookTitle, shortDescription, ISBN;
 
-                std::cout << "Author of the book: ";
-                std::cin >> nameAuthor;
+                if (findBookBy())
+                {
+                    std::cout << "Author of the book: ";
+                    std::cin >> nameAuthor;
 
-                std::cout << "Name of the book: ";
-                std::cin >> bookTitle;
+                    std::cout << "Name of the book: ";
+                    std::cin >> bookTitle;
 
-                std::cout << "Description of the book: ";
-                std::cin >> shortDescription;
+                    std::cout << "Book ISBN: ";
+                    std::cin >> ISBN;
 
-                std::cout << "Book ISBN: ";
-                std::cin >> ISBN;
+                    std::cout << std::endl;
 
-                std::cout << std::endl;
+                    this->MyLibrary.findBook(bookTitle, nameAuthor, shortDescription, ISBN, 1);
+                }
 
-                this->MyLibrary.findBook(bookTitle, nameAuthor, shortDescription, ISBN);
+                else
+                {
+                    std::cout << "Description of the book: ";
+                    std::cin >> shortDescription;
+
+                    std::cout << std::endl;
+
+                    this->MyLibrary.findBook(bookTitle, nameAuthor, shortDescription, ISBN, 0);
+                }
             }
 
             else if (selectOption == 3)
             {
                 if (validPassword())
                 {
+                    std::cout << std::endl;
                     MyString nameAuthor, bookTitle, nameTextFile, shortDescription, ISBN, bookContent;
 
                     std::cout << "Author of the book: ";
@@ -188,8 +227,7 @@ void UserConnection::runProgram()
                     std::cin >> bookContent;
 
                     this->MyLibrary.addBookToLibrary(nameAuthor, bookTitle, nameTextFile, shortDescription, rating, ISBN);
-                    // this->MyLibrary.addBookToMainTextFile(nameAuthor, bookTitle, nameTextFile, shortDescription, rating, ISBN);
-                    this->MyLibrary.addBookToBookTextFile(nameTextFile, bookContent);
+                    this->MyLibrary.addBookToTextFile(nameTextFile, bookContent);
                 }
                 else
                 {
@@ -201,6 +239,8 @@ void UserConnection::runProgram()
             {
                 if (validPassword())
                 {
+                    std::cout << std::endl;
+
                     MyString ISBN;
                     std::cout << "Write the ISBN of the book you want to remove: ";
                     std::cin >> ISBN;
@@ -235,7 +275,7 @@ void UserConnection::runProgram()
                     std::cout << "How many pages do you want to be printed on the console? ";
                     std::cin >> countLines;
 
-                    if (countLines > MyLibrary.getLinesCount(nameTextFile))
+                    if (countLines+1 > MyLibrary.getLinesCount(nameTextFile))
                     {
                         std::cout << "There aren't so much pages in this book!\n";
                         std::cout << std::endl;

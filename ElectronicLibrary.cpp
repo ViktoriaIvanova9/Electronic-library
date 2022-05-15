@@ -103,7 +103,7 @@ void ElectronicLibrary::readFromFile()
     int size = std::atoi(buffer);
     if (size == 0)
     {
-        std::cout << "The aren't any books in this library\n";
+        std::invalid_argument("There aren't any books in this library!\n");
         std::cout << std::endl;
         return;
     }
@@ -140,7 +140,7 @@ void ElectronicLibrary::selectionSort(Book **arrOfBooks, size_t booksCount, unsi
 
         for (j = i + 1; j < booksCount; ++j)
         {
-            if (property == 1) // by title
+            if (property == 1) /// sorting books by title
             {
                 if (order == false)
                 {
@@ -154,7 +154,7 @@ void ElectronicLibrary::selectionSort(Book **arrOfBooks, size_t booksCount, unsi
                 }
             }
 
-            else if (property == 2) // by author
+            else if (property == 2) /// sorting books by author
             {
                 if (order == false)
                 {
@@ -168,7 +168,7 @@ void ElectronicLibrary::selectionSort(Book **arrOfBooks, size_t booksCount, unsi
                 }
             }
 
-            else if (property == 3) // by rating
+            else if (property == 3) /// sorting by rating
             {
                 if (order == false)
                 {
@@ -193,37 +193,37 @@ void ElectronicLibrary::sortBooksBy(int property, int order)
 {
     if (isEmpty())
     {
-        std::cout << "There aren't any books in this library.\n";
+        std::cout << "There aren't any books in this library!\n";
         return;
     }
 
-    if (order == 1) // ascending order sort
+    if (order == 1) /// ascending order sort
     {
-        if (property == 1) // by title
+        if (property == 1) /// sorting by title
         {
             selectionSort(BooksLibrary, currCountBooks, 1, true);
         }
-        else if (property == 2) // by author
+        else if (property == 2) /// sorting by author
         {
             selectionSort(BooksLibrary, currCountBooks, 2, true);
         }
-        else // by rating
+        else /// sorting by rating
         {
             selectionSort(BooksLibrary, currCountBooks, 3, true);
         }
     }
 
-    else if (order == 2) // descending order sort
+    else if (order == 2) /// descending order sort
     {
-        if (property == 1) // by title
+        if (property == 1) /// sorting by title
         {
             selectionSort(BooksLibrary, currCountBooks, 1, false);
         }
-        else if (property == 2) // by author
+        else if (property == 2) /// sorting by author
         {
             selectionSort(BooksLibrary, currCountBooks, 2, false);
         }
-        else // by rating
+        else /// sorting by rating
         {
             selectionSort(BooksLibrary, currCountBooks, 3, false);
         }
@@ -238,27 +238,43 @@ void ElectronicLibrary::printSortedBooks() const
     }
 }
 
-void ElectronicLibrary::findBook(MyString bookTitle, MyString bookAuthor, MyString shortDescription, MyString ISBN)
+void ElectronicLibrary::printInfoAboutFoundBook(size_t position) const
 {
-    for (size_t i = 0; i < currCountBooks; ++i)
-    {
-        if ((BooksLibrary[i]->getBookTitle() == bookTitle && BooksLibrary[i]->getNameAuthor() == bookAuthor && BooksLibrary[i]->getISBN() == ISBN) /*|| (" " + isSubstring(BooksLibrary[i]->getShortDescription(), shortDescription))*/)
-        {
-            std::cout << "The name of the book is: " << BooksLibrary[i]->getBookTitle() << std::endl;
-            std::cout << "The author of the book is: " << BooksLibrary[i]->getNameAuthor() << std::endl;
-            std::cout << "The name of text file where the book is: " << BooksLibrary[i]->getNameTextFile() << std::endl;
-            std::cout << "The short description of the book is: " << BooksLibrary[i]->getShortDescription() << std::endl;
-            std::cout << "The reting of the book is: " << BooksLibrary[i]->getRating() << std::endl;
-            std::cout << "The ISBN of the book is: " << BooksLibrary[i]->getISBN() << std::endl;
-            std::cout << std::endl;
-            return;
-        }
-    }
-    std::cout << "There isn't such book in the library!\n";
+    std::cout << "The name of the book is: " << BooksLibrary[position]->getBookTitle() << std::endl;
+    std::cout << "The author of the book is: " << BooksLibrary[position]->getNameAuthor() << std::endl;
+    std::cout << "The name of text file where the book is: " << BooksLibrary[position]->getNameTextFile() << std::endl;
+    std::cout << "The short description of the book is: " << BooksLibrary[position]->getShortDescription() << std::endl;
+    std::cout << "The reting of the book is: " << BooksLibrary[position]->getRating() << std::endl;
+    std::cout << "The ISBN of the book is: " << BooksLibrary[position]->getISBN() << std::endl;
     std::cout << std::endl;
 }
 
-void ElectronicLibrary::addBookToBookTextFile(const MyString nameTextFile, const MyString bookContent)
+void ElectronicLibrary::findBook(MyString bookTitle, MyString bookAuthor, MyString shortDescription, MyString ISBN, bool property)
+{
+    for (size_t i = 0; i < currCountBooks; ++i)
+    {
+        if (property)
+        {
+            if ((BooksLibrary[i]->getBookTitle() == bookTitle && BooksLibrary[i]->getNameAuthor() == bookAuthor && BooksLibrary[i]->getISBN() == ISBN))
+            {
+                printInfoAboutFoundBook(i);
+                return;
+            }
+        }
+        else
+        {
+            if (MyString::isSubstring(BooksLibrary[i]->getShortDescription(), shortDescription))
+            {
+                printInfoAboutFoundBook(i);
+                return;
+            }
+        }
+    }
+    std::cout << "There isn't such book in this library!\n";
+    std::cout << std::endl;
+}
+
+void ElectronicLibrary::addBookToTextFile(const MyString nameTextFile, const MyString bookContent)
 {
     std::ofstream fileBook;
     fileBook.open(nameTextFile.c_str(), std::ios::app);
@@ -321,7 +337,7 @@ void ElectronicLibrary::deleteFileBook(MyString nameTextFile)
 {
     if (remove(nameTextFile.c_str()) != 0)
     {
-        std::cout << "Error deleting file!\n";
+        std::cout << "Error opening file!\n";
         std::cout << std::endl;
     }
     else
@@ -359,7 +375,7 @@ void ElectronicLibrary::printBookPages(const MyString fileName, size_t numberLin
 
     if (!fileBooks.is_open())
     {
-        std::cout << "Error opening file!\n";
+        std::cout<<"Error opening file!\n";
         std::cout << std::endl;
         return;
     }
@@ -381,41 +397,38 @@ void ElectronicLibrary::printBookPages(const MyString fileName, size_t numberLin
 
 void ElectronicLibrary::printBookSentences(const MyString fileName, size_t numberSentences) const
 {
-    std::ifstream fileBooks;
-    fileBooks.open(fileName.c_str(), std::ios::in);
+    std::ifstream fileBooks(fileName.c_str(), std::ios::in);
 
-    if (fileBooks.fail())
+    if (!fileBooks.is_open())
     {
         std::cout << "Error opening file!\n";
+        std::cout << std::endl;
         return;
     }
 
+    size_t countSentences = 0;
     char buffer[BUFF_SIZE];
-
-    fileBooks.getline(buffer, BUFF_SIZE);
-    size_t countSentences = 0, positionStopReading = 0;
-
-    fileBooks >> buffer;
-
-    for (size_t i = 0; i < BUFF_SIZE; ++i)
+    MyString tmp;
+    int sz;
+    while (!fileBooks.eof())
     {
-        if (buffer[i] == '.' || buffer[i] == '!' || buffer[i] == '?')
-            countSentences++;
 
-        if (countSentences == numberSentences)
+        fileBooks.getline(buffer, BUFF_SIZE);
+        sz = strlen(buffer);
+        for (size_t i = 0; i < sz; ++i)
         {
-            positionStopReading = i;
-            break;
+            if (buffer[i] == '.' || buffer[i] == '!' || buffer[i] == '?')
+            {
+                countSentences++;
+            }
+            tmp += (buffer[i]);
+            if (countSentences == numberSentences)
+                break;
         }
+        if (countSentences == numberSentences)
+            break;
     }
-
-    for (size_t i = 0; i <= positionStopReading; ++i)
-    {
-        std::cout << buffer[i];
-    }
-    std::cout << std::endl;
-    std::cout << std::endl;
-
+    std::cout << tmp << '\n';
     fileBooks.close();
 }
 
@@ -426,7 +439,7 @@ void ElectronicLibrary::writeToFile() const
 
     if (fileBooks.fail())
     {
-        std::cout << "Error while opening file!\n";
+        std::cout << "Error opening file!\n";
         return;
     }
 
